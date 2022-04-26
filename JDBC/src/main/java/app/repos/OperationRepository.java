@@ -1,14 +1,12 @@
 package app.repos;
 
 import app.models.Article;
+import app.models.OperationSummary;
 import jdbc.utils.JDBCUtils;
 import app.models.Operation;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +86,26 @@ public class OperationRepository {
             }
         } catch(Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public OperationSummary getSummary(Timestamp date1, Timestamp date2) {
+        try (Connection connection = JDBCUtils.getNewConnection()) {
+            try (Statement stm = connection.createStatement()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss");
+                ResultSet res = stm.executeQuery("SELECT sum(O.DEBIT) AS TOTAL_DEBIT, sum(O.CREDIT) AS TOTAL_CREDIT " +
+                        "FROM Operations O WHERE CREATE_DATE BETWEEN '" + formatter.format(date1.toLocalDateTime()) +
+                        "' AND '" + formatter.format(date2.toLocalDateTime()) + "'" );
+                OperationSummary summary = new OperationSummary();
+                if (res.next()) {
+                    summary.setDebit(res.getInt("TOTAL_DEBIT"));
+                    summary.setCredit(res.getInt("TOTAL_CREDIT"));
+                }
+                return summary;
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
