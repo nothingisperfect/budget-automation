@@ -95,6 +95,57 @@ public class BalanceRepository {
         }
     }
 
+    public List<Balance> getOverview() {
+        try (Connection connection = JDBCUtils.getNewConnection()) {
+            try (Statement stm = connection.createStatement()) {
+                ResultSet res = stm.executeQuery(
+                        "SELECT Balance.ID, Balance.CREATE_DATE, " +
+                                "sum(O.DEBIT) AS TOTAL_DEBIT, sum(O.CREDIT) AS TOTAL_CREDIT " +
+                                "FROM Balance LEFT JOIN Operations O on Balance.ID = O.BALANCE_ID " +
+                                "GROUP BY Balance.ID, Balance.CREATE_DATE" );
+                List<Balance> balances = new ArrayList<>();
+                while (res.next()) {
+                    Balance balance = new Balance();
+                    balance.setId(res.getInt("ID"));
+                    balance.setCreateDate(res.getTimestamp("CREATE_DATE"));
+                    balance.setDebit(res.getInt("TOTAL_DEBIT"));
+                    balance.setCredit(res.getInt("TOTAL_CREDIT"));
+                    balances.add(balance);
+                }
+                return  balances;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Balance getOverviewById(int id) {
+        try (Connection connection = JDBCUtils.getNewConnection()) {
+            try (Statement stm = connection.createStatement()) {
+                ResultSet res = stm.executeQuery(
+                        "SELECT Balance.ID, Balance.CREATE_DATE, " +
+                                "sum(O.DEBIT) AS TOTAL_DEBIT, sum(O.CREDIT) AS TOTAL_CREDIT " +
+                                "FROM Balance LEFT JOIN Operations O on Balance.ID = O.BALANCE_ID " +
+                                "WHERE Balance.ID = " + id + " " +
+                                "GROUP BY Balance.ID, Balance.CREATE_DATE");
+                Balance balance = new Balance();
+                if (res.next()) {
+                    balance.setId(res.getInt("ID"));
+                    balance.setCreateDate(res.getTimestamp("CREATE_DATE"));
+                    balance.setDebit(res.getInt("TOTAL_DEBIT"));
+                    balance.setCredit(res.getInt("TOTAL_CREDIT"));
+                    return balance;
+                } else {
+                    return null;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private Balance load(ResultSet res) throws SQLException {
         Balance balance = new Balance();
         balance.setId(res.getInt("ID"));

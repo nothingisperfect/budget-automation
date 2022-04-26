@@ -67,4 +67,13 @@ public class ArticleController {
                 ? new ResponseEntity<>(articles, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @GetMapping(value = "/articles/overview/{id}")
+    public ResponseEntity<ArticleOverview> getOverviewByName(@PathVariable(name = "id") int id) {
+        final ArticleOverview article = articleService.getOverviewByName(id);
+
+        return article != null
+                ? new ResponseEntity<>(article, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

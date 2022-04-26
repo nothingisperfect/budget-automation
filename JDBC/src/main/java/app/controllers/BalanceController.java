@@ -58,4 +58,22 @@ public class BalanceController {
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping(value = "balances/calculated")
+    public ResponseEntity<List<Balance>> getOverview() {
+        final List<Balance> balances = balanceService.getOverview();
+
+        return balances != null
+                ? new ResponseEntity<>(balances, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(value = "balances/calculated/{id}")
+    public ResponseEntity<Balance> getOverviewById(@PathVariable(name = "id") int id) {
+        final Balance balance = balanceService.getOverviewById(id);
+
+        return balance != null
+                ? new ResponseEntity<>(balance, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }

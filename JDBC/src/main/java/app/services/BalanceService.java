@@ -43,4 +43,12 @@ public class BalanceService {
         }
         return false;
     }
+
+    public List<Balance> getOverview() {
+        return balanceRepository.getOverview();
+    }
+
+    public Balance getOverviewById(int id) {
+        return balanceRepository.getOverviewById(id);
+    }
 }

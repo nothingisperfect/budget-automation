@@ -46,4 +46,11 @@ public class ArticleService {
     public List<ArticleOverview> getOverview() {
         return articleRepository.getOverview();
     }
+
+    public ArticleOverview getOverviewByName(int id) {
+        if (articleRepository.exists(id)) {
+            return articleRepository.getOverviewByName(id);
+        }
+        return null;
+    }
 }
