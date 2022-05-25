@@ -16,39 +16,39 @@ public class BalanceService {
 
     public void create(Balance balance) {
         balance.setCreateDate(new Timestamp(System.currentTimeMillis()));
-        balanceRepository.create(balance);
+        balanceRepository.save(balance);
     }
 
-    public List<Balance> readAll() {
-        return balanceRepository.readAll();
+    public Iterable<Balance> readAll() {
+        return balanceRepository.findAll();
     }
 
     public Balance read(int id) {
-        return balanceRepository.readOne(id);
+        return balanceRepository.findById(id).orElse(null);
     }
 
     public boolean update(Balance balance, int id) {
-        if (balanceRepository.exists(id)) {
+        if (balanceRepository.existsById(id)) {
             balance.setId(id);
-            balanceRepository.update(balance);
+            balanceRepository.save(balance);
             return true;
         }
         return false;
     }
 
     public boolean delete(int id) {
-        if(balanceRepository.exists(id)) {
-            balanceRepository.deleteOne(id);
+        if(balanceRepository.existsById(id)) {
+            balanceRepository.deleteById(id);
             return true;
         }
         return false;
     }
 
-    public List<Balance> getOverview() {
-        return balanceRepository.getOverview();
-    }
+//    public List<Balance> getOverview() {
+//        return balanceRepository.getOverview();
+//    }
 
-    public Balance getOverviewById(int id) {
-        return balanceRepository.getOverviewById(id);
-    }
+//    public Balance getOverviewById(int id) {
+//        return balanceRepository.getOverviewById(id);
+//    }
 }

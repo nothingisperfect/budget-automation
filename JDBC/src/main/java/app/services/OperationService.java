@@ -17,39 +17,39 @@ public class OperationService {
     private OperationRepository operationRepository;
 
     public void create(Operation operation) {
-        operationRepository.create(operation);
+        operationRepository.save(operation);
     }
 
-    public List<Operation> readAll() {
-        return operationRepository.readAll();
+    public Iterable<Operation> readAll() {
+        return operationRepository.findAll();
     }
 
     public Operation read(int id) {
-        return operationRepository.readOne(id);
+        return operationRepository.findById(id).orElse(null);
     }
 
     public boolean update(Operation operation, int id) {
-        if (operationRepository.exists(id)) {
+        if (operationRepository.existsById(id)) {
             operation.setId(id);
-            operationRepository.update(operation);
+            operationRepository.save(operation);
             return true;
         }
         return false;
     }
 
     public boolean delete(int id) {
-        if (operationRepository.exists(id)) {
-            operationRepository.deleteOne(id);
+        if (operationRepository.existsById(id)) {
+            operationRepository.deleteById(id);
             return true;
         }
         return false;
     }
 
-    public List<Operation> findByArticleName(String name) {
-        return operationRepository.findByArticleName(name);
-    }
+//    public List<Operation> findByArticleName(String name) {
+//        return operationRepository.findByArticleName(name);
+//    }
 
-    public OperationSummary getSummary(Timestamp date1, Timestamp date2) {
-        return operationRepository.getSummary(date1, date2);
-    }
+//    public OperationSummary getSummary(Timestamp date1, Timestamp date2) {
+//        return operationRepository.getSummary(date1, date2);
+//    }
 }

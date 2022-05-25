@@ -15,42 +15,42 @@ public class ArticleService {
     private ArticleRepository articleRepository;
 
     public void create(Article article) {
-        articleRepository.create(article);
+        articleRepository.save(article);
     }
 
-    public List<Article> readAll() {
-        return articleRepository.readAll();
+    public Iterable<Article> readAll() {
+        return articleRepository.findAll();
     }
 
     public Article read(int id) {
-        return articleRepository.readOne(id);
+        return articleRepository.findById(id).orElse(null);
     }
 
     public boolean update(Article article, int id) {
-        if (articleRepository.exists(id)) {
+        if (articleRepository.existsById(id)) {
             article.setId(id);
-            articleRepository.update(article);
+            articleRepository.save(article);
             return true;
         }
         return false;
     }
 
     public boolean delete(int id) {
-        if (articleRepository.exists(id)) {
-            articleRepository.deleteOne(id);
+        if (articleRepository.existsById(id)) {
+            articleRepository.deleteById(id);
             return true;
         }
         return false;
     }
 
-    public List<ArticleOverview> getOverview() {
-        return articleRepository.getOverview();
-    }
+//    public List<ArticleOverview> getOverview() {
+//        return articleRepository.getOverview();
+//    }
 
-    public ArticleOverview getOverviewByName(int id) {
-        if (articleRepository.exists(id)) {
-            return articleRepository.getOverviewByName(id);
-        }
-        return null;
-    }
+//    public ArticleOverview getOverviewByName(int id) {
+//        if (articleRepository.existsById(id)) {
+//            return articleRepository.getOverviewByName(id);
+//        }
+//        return null;
+//    }
 }

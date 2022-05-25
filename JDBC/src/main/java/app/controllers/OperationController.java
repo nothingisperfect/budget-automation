@@ -1,6 +1,5 @@
 package app.controllers;
 
-import app.models.Article;
 import app.models.Operation;
 import app.models.OperationSummary;
 import app.services.OperationService;
@@ -27,8 +26,8 @@ public class OperationController {
     }
 
     @GetMapping(value = "/operations")
-    public ResponseEntity<List<Operation>> read() {
-        final List<Operation> operations = operationService.readAll();
+    public ResponseEntity<Iterable<Operation>> read() {
+        final Iterable<Operation> operations = operationService.readAll();
 
         return operations != null
                 ? new ResponseEntity<>(operations, HttpStatus.OK)
@@ -62,31 +61,31 @@ public class OperationController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/operations/find")
-    public ResponseEntity<List<Operation>> findByArticleName(@RequestParam String name) {
-        final List<Operation> operation = operationService.findByArticleName(name);
+//    @GetMapping(value = "/operations/find")
+//    public ResponseEntity<List<Operation>> findByArticleName(@RequestParam String name) {
+//        final List<Operation> operation = operationService.findByArticleName(name);
+//
+//        return  operation != null
+//                ? new ResponseEntity<>(operation, HttpStatus.OK)
+//                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
 
-        return  operation != null
-                ? new ResponseEntity<>(operation, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @GetMapping(value = "/operations/sum")
-    public ResponseEntity<OperationSummary> getSummary(@RequestParam int month) {
-        Timestamp date1 = new Timestamp(System.currentTimeMillis());
-        Timestamp date2 = new Timestamp(System.currentTimeMillis());
-        date1.setMonth(month);
-        date1.setDate(1);
-        if(month == 12) {
-            date2.setYear(date2.getYear() + 1);
-            date2.setMonth(1);
-        } else {
-            date2.setMonth(month + 1);
-        }
-        date2.setDate(1);
-        final OperationSummary summary = operationService.getSummary(date1, date2);
-        return  summary != null
-                ? new ResponseEntity<>(summary, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @GetMapping(value = "/operations/sum")
+//    public ResponseEntity<OperationSummary> getSummary(@RequestParam int month) {
+//        Timestamp date1 = new Timestamp(System.currentTimeMillis());
+//        Timestamp date2 = new Timestamp(System.currentTimeMillis());
+//        date1.setMonth(month);
+//        date1.setDate(1);
+//        if(month == 12) {
+//            date2.setYear(date2.getYear() + 1);
+//            date2.setMonth(1);
+//        } else {
+//            date2.setMonth(month + 1);
+//        }
+//        date2.setDate(1);
+//        final OperationSummary summary = operationService.getSummary(date1, date2);
+//        return  summary != null
+//                ? new ResponseEntity<>(summary, HttpStatus.OK)
+//                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }

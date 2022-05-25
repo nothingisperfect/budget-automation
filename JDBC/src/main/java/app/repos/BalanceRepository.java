@@ -1,158 +1,17 @@
 package app.repos;
 
-import jdbc.utils.JDBCUtils;
 import app.models.Balance;
+//import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class BalanceRepository {
-    public void create(Balance balance) {
-        try (Connection connection = JDBCUtils.getNewConnection()) {
-            try (Statement stm = connection.createStatement()) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss");
-                stm.execute("INSERT INTO Balance VALUES (" +
-                        "default, " +
-                        "'" + formatter.format(balance.getCreateDate().toLocalDateTime()) + "'" + ", " +
-                        balance.getDebit() + ", " +
-                        balance.getCredit() + ", " +
-                        balance.getAmount() + ")" );
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void update(Balance balance) {
-        try (Connection connection = JDBCUtils.getNewConnection()) {
-            try (Statement stm = connection.createStatement()) {
-                stm.execute("UPDATE Balance SET " +
-                        "DEBIT = " + balance.getDebit() + ", " +
-                        "CREDIT = " + balance.getCredit() + ", " +
-                        "AMOUNT = " + balance.getAmount() +
-                        "WHERE ID = " + balance.getId());
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public List<Balance> readAll() {
-        try (Connection connection = JDBCUtils.getNewConnection()) {
-            try (Statement stm = connection.createStatement()) {
-                ResultSet res = stm.executeQuery("SELECT * FROM Balance");
-                List<Balance> balances = new ArrayList<>();
-                while (res.next()) {
-                    balances.add(load(res));
-                }
-                return balances;
-            }
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-    public Balance readOne(int id) {
-        try (Connection connection = JDBCUtils.getNewConnection()) {
-            try (Statement stm = connection.createStatement()) {
-                    ResultSet res = stm.executeQuery("SELECT * FROM Balance WHERE ID = " + id);
-                if (res.next()) {
-                    return load(res);
-                } else {
-                    return null;
-                }
-            }
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-    public void deleteOne(int id) {
-        try (Connection connection = JDBCUtils.getNewConnection()) {
-            try (Statement stm = connection.createStatement()) {
-                stm.execute("DELETE FROM Balance WHERE ID = " + id);
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean exists(int id) {
-        try (Connection connection = JDBCUtils.getNewConnection()) {
-            try (Statement stm = connection.createStatement()) {
-                ResultSet res = stm.executeQuery("SELECT * FROM Balance WHERE ID = " + id);
-                return res.next();
-            }
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public List<Balance> getOverview() {
-        try (Connection connection = JDBCUtils.getNewConnection()) {
-            try (Statement stm = connection.createStatement()) {
-                ResultSet res = stm.executeQuery(
-                        "SELECT Balance.ID, Balance.CREATE_DATE, " +
-                                "sum(O.DEBIT) AS TOTAL_DEBIT, sum(O.CREDIT) AS TOTAL_CREDIT " +
-                                "FROM Balance LEFT JOIN Operations O on Balance.ID = O.BALANCE_ID " +
-                                "GROUP BY Balance.ID, Balance.CREATE_DATE" );
-                List<Balance> balances = new ArrayList<>();
-                while (res.next()) {
-                    Balance balance = new Balance();
-                    balance.setId(res.getInt("ID"));
-                    balance.setCreateDate(res.getTimestamp("CREATE_DATE"));
-                    balance.setDebit(res.getInt("TOTAL_DEBIT"));
-                    balance.setCredit(res.getInt("TOTAL_CREDIT"));
-                    balances.add(balance);
-                }
-                return  balances;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Balance getOverviewById(int id) {
-        try (Connection connection = JDBCUtils.getNewConnection()) {
-            try (Statement stm = connection.createStatement()) {
-                ResultSet res = stm.executeQuery(
-                        "SELECT Balance.ID, Balance.CREATE_DATE, " +
-                                "sum(O.DEBIT) AS TOTAL_DEBIT, sum(O.CREDIT) AS TOTAL_CREDIT " +
-                                "FROM Balance LEFT JOIN Operations O on Balance.ID = O.BALANCE_ID " +
-                                "WHERE Balance.ID = " + id + " " +
-                                "GROUP BY Balance.ID, Balance.CREATE_DATE");
-                Balance balance = new Balance();
-                if (res.next()) {
-                    balance.setId(res.getInt("ID"));
-                    balance.setCreateDate(res.getTimestamp("CREATE_DATE"));
-                    balance.setDebit(res.getInt("TOTAL_DEBIT"));
-                    balance.setCredit(res.getInt("TOTAL_CREDIT"));
-                    return balance;
-                } else {
-                    return null;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private Balance load(ResultSet res) throws SQLException {
-        Balance balance = new Balance();
-        balance.setId(res.getInt("ID"));
-        balance.setCreateDate(res.getTimestamp("CREATE_DATE"));
-        balance.setDebit(res.getInt("DEBIT"));
-        balance.setCredit(res.getInt("CREDIT"));
-        balance.setAmount(res.getInt("AMOUNT"));
-        return balance;
-    }
+public interface BalanceRepository extends CrudRepository<Balance,Integer> {
+//    Balance readOne(int id);
+////    List<Balance> readAll();
+////    void deleteOne(int id);
+//    List<Balance> getOverview();
+//    Balance getOverviewById(int id);
 }

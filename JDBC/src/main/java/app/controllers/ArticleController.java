@@ -24,8 +24,8 @@ public class ArticleController {
     }
 
     @GetMapping(value = "/articles")
-    public ResponseEntity<List<Article>> read() {
-        final List<Article> articles = articleService.readAll();
+    public ResponseEntity<Iterable<Article>> read() {
+        final Iterable<Article> articles = articleService.readAll();
 
         return articles != null
                 ? new ResponseEntity<>(articles, HttpStatus.OK)
@@ -59,21 +59,21 @@ public class ArticleController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/articles/overview")
-    public ResponseEntity<List<ArticleOverview>> getOverview() {
-        final List<ArticleOverview> articles = articleService.getOverview();
+//    @GetMapping(value = "/articles/overview")
+//    public ResponseEntity<List<ArticleOverview>> getOverview() {
+//        final List<ArticleOverview> articles = articleService.getOverview();
+//
+//        return articles != null
+//                ? new ResponseEntity<>(articles, HttpStatus.OK)
+//                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
-        return articles != null
-                ? new ResponseEntity<>(articles, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @GetMapping(value = "/articles/overview/{id}")
-    public ResponseEntity<ArticleOverview> getOverviewByName(@PathVariable(name = "id") int id) {
-        final ArticleOverview article = articleService.getOverviewByName(id);
-
-        return article != null
-                ? new ResponseEntity<>(article, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @GetMapping(value = "/articles/overview/{id}")
+//    public ResponseEntity<ArticleOverview> getOverviewByName(@PathVariable(name = "id") int id) {
+//        final ArticleOverview article = articleService.getOverviewByName(id);
+//
+//        return article != null
+//                ? new ResponseEntity<>(article, HttpStatus.OK)
+//                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }

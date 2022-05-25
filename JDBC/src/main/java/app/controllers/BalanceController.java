@@ -24,8 +24,8 @@ public class BalanceController {
     }
 
     @GetMapping(value = "/balances")
-    public ResponseEntity<List<Balance>> read() {
-        final List<Balance> balances = balanceService.readAll();
+    public ResponseEntity<Iterable<Balance>> read() {
+        final Iterable<Balance> balances = balanceService.readAll();
 
         return balances != null
                 ? new ResponseEntity<>(balances, HttpStatus.OK)
@@ -59,21 +59,21 @@ public class BalanceController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "balances/calculated")
-    public ResponseEntity<List<Balance>> getOverview() {
-        final List<Balance> balances = balanceService.getOverview();
+//    @GetMapping(value = "balances/calculated")
+//    public ResponseEntity<List<Balance>> getOverview() {
+//        final List<Balance> balances = balanceService.getOverview();
+//
+//        return balances != null
+//                ? new ResponseEntity<>(balances, HttpStatus.OK)
+//                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
 
-        return balances != null
-                ? new ResponseEntity<>(balances, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @GetMapping(value = "balances/calculated/{id}")
-    public ResponseEntity<Balance> getOverviewById(@PathVariable(name = "id") int id) {
-        final Balance balance = balanceService.getOverviewById(id);
-
-        return balance != null
-                ? new ResponseEntity<>(balance, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+//    @GetMapping(value = "balances/calculated/{id}")
+//    public ResponseEntity<Balance> getOverviewById(@PathVariable(name = "id") int id) {
+//        final Balance balance = balanceService.getOverviewById(id);
+//
+//        return balance != null
+//                ? new ResponseEntity<>(balance, HttpStatus.OK)
+//                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
 }
