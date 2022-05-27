@@ -1,13 +1,10 @@
 package app.services;
 
 import app.models.Article;
-import app.models.ArticleOverview;
 import app.repos.ArticleRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @Service
 public class ArticleService {
@@ -43,14 +40,7 @@ public class ArticleService {
         return false;
     }
 
-//    public List<ArticleOverview> getOverview() {
-//        return articleRepository.getOverview();
-//    }
-
-//    public ArticleOverview getOverviewByName(int id) {
-//        if (articleRepository.existsById(id)) {
-//            return articleRepository.getOverviewByName(id);
-//        }
-//        return null;
-//    }
+    public Iterable<Article> searchByName(String name) {
+        return articleRepository.findArticleByNameStartsWithIgnoreCase(name);
+    }
 }

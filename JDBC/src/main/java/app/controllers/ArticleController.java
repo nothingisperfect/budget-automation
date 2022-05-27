@@ -1,20 +1,21 @@
 package app.controllers;
 
 import app.models.Article;
-import app.models.ArticleOverview;
+import app.models.Operation;
 import app.services.ArticleService;
+import app.services.OperationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 public class ArticleController {
     private final ArticleService articleService;
+    private final OperationService operationService;
 
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, OperationService operationService) {
         this.articleService = articleService;
+        this.operationService = operationService;
     }
 
     @PostMapping(value = "/articles")
@@ -50,30 +51,21 @@ public class ArticleController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping(value = "/articles/{id}")
-    public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
-        final boolean deleted = articleService.delete(id);
+    @GetMapping(value = "/articles/{id}/operations")
+        public ResponseEntity<Iterable<Operation>> getOperations(@PathVariable(name = "id") int id) {
+            final Iterable<Operation> operations = operationService.findByArtcileId(id);
 
-        return deleted
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return operations != null
+                    ? new ResponseEntity<>(operations, HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-//    @GetMapping(value = "/articles/overview")
-//    public ResponseEntity<List<ArticleOverview>> getOverview() {
-//        final List<ArticleOverview> articles = articleService.getOverview();
-//
-//        return articles != null
-//                ? new ResponseEntity<>(articles, HttpStatus.OK)
-//                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @GetMapping(value = "/articles/search")
+    public ResponseEntity<Iterable<Article>> search(@RequestParam String name) {
+        final Iterable<Article> articles = articleService.searchByName(name);
 
-//    @GetMapping(value = "/articles/overview/{id}")
-//    public ResponseEntity<ArticleOverview> getOverviewByName(@PathVariable(name = "id") int id) {
-//        final ArticleOverview article = articleService.getOverviewByName(id);
-//
-//        return article != null
-//                ? new ResponseEntity<>(article, HttpStatus.OK)
-//                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+        return articles != null
+                ? new ResponseEntity<>(articles, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

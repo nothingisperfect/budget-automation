@@ -1,20 +1,22 @@
 package app.controllers;
 
 import app.models.Balance;
+import app.models.Operation;
 import app.services.BalanceService;
 
+import app.services.OperationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 public class BalanceController {
     private final BalanceService balanceService;
+    private final OperationService operationService;
 
-    public BalanceController(BalanceService balanceService) {
+    public BalanceController(BalanceService balanceService, OperationService operationService) {
         this.balanceService = balanceService;
+        this.operationService = operationService;
     }
 
     @PostMapping(value = "/balances")
@@ -50,30 +52,12 @@ public class BalanceController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping(value = "/balances/{id}")
-    public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
-        final boolean deleted = balanceService.delete(id);
+    @GetMapping(value = "/balances/{id}/operations")
+    public ResponseEntity<Iterable<Operation>> getOperations(@PathVariable(name = "id") int id) {
+        final Iterable<Operation> operations = operationService.findByBalanceId(id);
 
-        return deleted
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return operations != null
+                ? new ResponseEntity<>(operations, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-//    @GetMapping(value = "balances/calculated")
-//    public ResponseEntity<List<Balance>> getOverview() {
-//        final List<Balance> balances = balanceService.getOverview();
-//
-//        return balances != null
-//                ? new ResponseEntity<>(balances, HttpStatus.OK)
-//                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
-
-//    @GetMapping(value = "balances/calculated/{id}")
-//    public ResponseEntity<Balance> getOverviewById(@PathVariable(name = "id") int id) {
-//        final Balance balance = balanceService.getOverviewById(id);
-//
-//        return balance != null
-//                ? new ResponseEntity<>(balance, HttpStatus.OK)
-//                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
 }

@@ -1,10 +1,8 @@
 package app.models;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,12 +36,12 @@ public class Article {
     public void setName(String name) {
         this.name = name;
     }
-
-    public List<Operation> getOperation() {
+    @JsonIgnore
+    public List<Operation> getOperations() {
         return operations;
     }
 
-    public void setOperation(List<Operation> operation) {
+    public void setOperations(List<Operation> operation) {
         this.operations = operation;
     }
 }

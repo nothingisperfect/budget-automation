@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Service
 public class BalanceService {
@@ -43,12 +42,4 @@ public class BalanceService {
         }
         return false;
     }
-
-//    public List<Balance> getOverview() {
-//        return balanceRepository.getOverview();
-//    }
-
-//    public Balance getOverviewById(int id) {
-//        return balanceRepository.getOverviewById(id);
-//    }
 }

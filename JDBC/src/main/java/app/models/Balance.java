@@ -1,6 +1,5 @@
 package app.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 
@@ -16,7 +15,7 @@ public class Balance {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "createDate", nullable = false)
+    @Column(name = "create_date", nullable = false)
     private Timestamp createDate;
     @Column(name = "debit", nullable = false)
     private Integer debit;
@@ -70,11 +69,12 @@ public class Balance {
         this.amount = amount;
     }
 
-//    public List<Operation> getOperation() {
-//        return operations;
-//    }
-//
-//    public void setOperation(List<Operation> operation) {
-//        this.operations = operation;
-//    }
+    @JsonIgnore
+    public List<Operation> getOperations() {
+        return operations;
+    }
+
+    public void setOperations(List<Operation> operation) {
+        this.operations = operation;
+    }
 }

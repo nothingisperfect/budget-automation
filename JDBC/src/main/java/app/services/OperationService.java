@@ -1,15 +1,10 @@
 package app.services;
 
-import app.models.Article;
 import app.models.Operation;
-import app.models.OperationSummary;
 import app.repos.OperationRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.sql.Timestamp;
-import java.util.List;
 
 @Service
 public class OperationService {
@@ -45,11 +40,15 @@ public class OperationService {
         return false;
     }
 
-//    public List<Operation> findByArticleName(String name) {
-//        return operationRepository.findByArticleName(name);
-//    }
+    public Iterable<Operation> findByBalanceId(int id) {
+        return operationRepository.findOperationsByBalanceIdOrderByCreateDate(id);
+    }
 
-//    public OperationSummary getSummary(Timestamp date1, Timestamp date2) {
-//        return operationRepository.getSummary(date1, date2);
-//    }
+    public Iterable<Operation> findByArtcileId(int id) {
+        return operationRepository.findOperationsByArticleIdOrderByCreateDate(id);
+    }
+
+    public Iterable<Operation> findMoreThan(int val) {
+        return operationRepository.findOperationsByDebitGreaterThanEqualOrCreditGreaterThanEqual(val, val);
+    }
 }
